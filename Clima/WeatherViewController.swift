@@ -1,10 +1,4 @@
-//
-//  ViewController.swift
-//  WeatherApp
-//
-//  Created by Angela Yu on 23/08/2015.
-//  Copyright (c) 2015 London App Brewery. All rights reserved.
-//
+
 
 import UIKit
 import CoreLocation
@@ -13,7 +7,8 @@ import SwiftyJSON
 
 /* 1. import CoreLocation
  2. weatherViewController class conform the protocol of CLLocationManagerDelegate
- 3. create oject from CLLocationManager class :- let locationManager = CLLocationManager()
+ 3. create an oject from CLLocationManager class :-
+ let locationManager = CLLocationManager()
  4. get URL address
  5. API ID (unique key)
  6. Set up the location manager here.
@@ -42,7 +37,7 @@ import SwiftyJSON
  and if fail than
  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
  print(error)
-}
+ }
  */
 
 
@@ -56,18 +51,18 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
     let APP_ID = "620b55b53286cb3ff60dba91117e3dba"
     /***Get your own App ID at https://openweathermap.org/appid ****/
     
-
+    
     //TODO: Declare instance variables here
     let locationManager = CLLocationManager()
     let weatherDataModel = WeatherDataModel()
     
-
+    
     
     //Pre-linked IBOutlets
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var temperatureLabel: UILabel!
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +73,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
-    
+        
         
         
     }
@@ -94,11 +89,11 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
             response in
             if response.result.isSuccess {
                 
-                print("Success! Got the weather data")
+                //print("Success! Got the weather data")
                 let weatherJSON : JSON = JSON(response.result.value!)
-                //print(weatherJSON)
+                print(weatherJSON)
                 
-               self.updateWeatherData(json: weatherJSON)
+                self.updateWeatherData(json: weatherJSON)
                 
             }
             else {
@@ -114,8 +109,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
     //Write the updateWeatherData method here:
     func updateWeatherData(json: JSON) {
         if let tempResult = json["main"]["temp"].double{
-        weatherDataModel.temperature = Int(tempResult - 273.15)
-        weatherDataModel.city = json["name"].stringValue
+            weatherDataModel.temperature = Int(tempResult - 273.15)
+            weatherDataModel.city = json["name"].stringValue
             weatherDataModel.condition = json["weather"][0]["id"].intValue
             weatherDataModel.weatherIconName = weatherDataModel.updateWeatherIcon(condition: weatherDataModel.condition)
             updateUIWithWeatherData()
@@ -124,8 +119,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
             cityLabel.text = "Weather Unvailable"
         }
     }
-
-
+    
+    
     
     //MARK: - UI Updates
     /***************************************************************/
@@ -145,12 +140,12 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
     
     //Write the didUpdateLocations method here:
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-       //after getting the accurate location it save the data in array
+        //after getting the accurate location it save the data in array
         let location = locations[locations.count - 1] // in order to get last, in number of count minus one 1 because array index starts with 0
         
         if location.horizontalAccuracy > 0{ //checking the location is valid or not..if so than use stopUpdatingLocation() prpperties. otherwise battery will be low.why because of it will keep updating.
             locationManager.stopUpdatingLocation()
-           // locationManager.delegate = nil // once data location found just set locationManager delegate = nill so this way it will print once
+            // locationManager.delegate = nil // once data location found just set locationManager delegate = nill so this way it will print once
             
             print("longitude = \(location.coordinate.longitude) latitude = \(location.coordinate.latitude)")
             
@@ -170,7 +165,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate,changeC
         print(error)
         cityLabel.text = "Location Unavailable"
     }
-
+    
     
     //MARK: - Change City Delegate methods
     /***************************************************************/
